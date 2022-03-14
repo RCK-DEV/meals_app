@@ -18,7 +18,7 @@ class CategoriesMealsScreen extends StatelessWidget {
         DUMMY_MEALS.where((meal) => meal.categories.contains(category.id)).toList();
 
     return Scaffold(
-        appBar: AppBar(title: Text(category.id)), body: buildScaffoldBody(context, meals));
+        appBar: AppBar(title: Text(category.title)), body: buildScaffoldBody(context, meals));
   }
 
   Widget buildScaffoldBody(BuildContext context, List<Meal> meals) {

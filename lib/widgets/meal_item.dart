@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:meals_app/screens/meal_detail_screen.dart';
 
 import '../models/meal.dart';
 
@@ -8,38 +9,14 @@ class MealItem extends StatelessWidget {
 
   const MealItem(this.meal);
 
-  void selectMeal() {}
-
-  String get complexityText {
-    switch (meal.complexity) {
-      case Complexity.Simple:
-        return 'Simple';
-      case Complexity.Challenging:
-        return 'Challenging';
-      case Complexity.Hard:
-        return 'Hard';
-      default:
-        return 'Undefined';
-    }
-  }
-
-  String get affordabilityText {
-    switch (meal.affordability) {
-      case Affordability.Affordable:
-        return 'Affordable';
-      case Affordability.Pricey:
-        return 'Pricey';
-      case Affordability.Luxurious:
-        return 'Luxurious';
-      default:
-        return 'Undefined';
-    }
+  void selectMeal(BuildContext context) {
+    Navigator.of(context).pushNamed(MealDetailScreen.routeName, arguments: {'meal': meal});
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: selectMeal,
+      onTap: () => selectMeal(context),
       child: Card(
           elevation: 4,
           margin: EdgeInsets.all(10),
@@ -91,13 +68,17 @@ class MealItem extends StatelessWidget {
                       ],
                     ),
                     Row(
-                      children: [Icon(Icons.work), SizedBox(width: 6), Text('${complexityText}')],
+                      children: [
+                        Icon(Icons.work),
+                        SizedBox(width: 6),
+                        Text('${meal.complexityText}')
+                      ],
                     ),
                     Row(
                       children: [
                         Icon(Icons.attach_money),
                         SizedBox(width: 6),
-                        Text('${affordabilityText}')
+                        Text('${meal.affordabilityText}')
                       ],
                     )
                   ],
