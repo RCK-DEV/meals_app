@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/screens/categories_meals_screen.dart';
+import 'package:meals_app/screens/tabs_screen.dart';
+
+import '../models/filter.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
 class FiltersScreen extends StatefulWidget {
   static const routeName = '/filters';
+  final List<Filter> _filters;
+  final Function(List<Filter> filterData) _saveFilters;
+
+  FiltersScreen(this._saveFilters, this._filters);
 
   @override
   State<FiltersScreen> createState() => _FiltersScreenState();
@@ -15,37 +23,21 @@ class FilterWrapper {
 }
 
 class _FiltersScreenState extends State<FiltersScreen> {
-  List<Map<String, dynamic>> filters = [
-    {
-      'id': 'glutenFree',
-      'title': 'Gluten-free',
-      'subtitle': 'Only includes gluten-free meals.',
-      'filter': FilterWrapper(false),
-    },
-    {
-      'id': 'vegetarian',
-      'title': 'Vegetarian',
-      'subtitle': 'Only includes vegetarian meals.',
-      'filter': FilterWrapper(false),
-    },
-    {
-      'id': 'vegan',
-      'title': 'Vegan',
-      'subtitle': 'Only includes vegan meals.',
-      'filter': FilterWrapper(false),
-    },
-    {
-      'id': 'lactoseFree',
-      'title': 'Lactose-free',
-      'subtitle': 'Only includes lactose-free meals.',
-      'filter': FilterWrapper(false),
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Your filters')),
+      appBar: AppBar(
+        title: Text('Your filters'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              widget._saveFilters(widget._filters);
+              Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
+            },
+            icon: Icon(Icons.save),
+          )
+        ],
+      ),
       drawer: MainDrawer(),
       body: Column(
         children: [
@@ -58,12 +50,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
           Expanded(
               child: ListView(
-            children: filters.map((filter) {
-              return _buildSwitchListTile(
-                filter['filter'],
-                filter['title'],
-                filter['subtitle'],
-              );
+            children: widget._filters.map((filter) {
+              return _buildSwitchListTile(filter);
             }).toList(),
             // children: [
             //   _buildSwitchListTile(_glutenFree, 'Gluten-free', 'Only includes gluten-free meals.'),
@@ -74,14 +62,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
     );
   }
 
-  Widget _buildSwitchListTile(FilterWrapper filter, String title, String subtitle) {
+  Widget _buildSwitchListTile(Filter filter) {
     return SwitchListTile(
-      value: filter._value,
+      value: filter.isEnabled,
       onChanged: (newBoolState) {
-        setState(() => filter.switchState());
+        setState(() => filter.isEnabled = !filter.isEnabled);
       },
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: Text(filter.title),
+      subtitle: Text(filter.subtitle),
     );
   }
 }

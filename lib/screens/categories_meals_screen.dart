@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/meal.dart';
-import '../dummy_data.dart';
 import '../models/meal_category.dart';
 import '../widgets/meal_item.dart';
 
@@ -9,6 +8,9 @@ class CategoriesMealsScreen extends StatefulWidget {
   // final Category category;
   // const CategoriesMealsScreen(this.category);
   static const routeName = '/category-meals';
+  List<Meal> _availableMeals;
+
+  CategoriesMealsScreen(this._availableMeals);
 
   @override
   State<CategoriesMealsScreen> createState() => _CategoriesMealsScreenState();
@@ -16,7 +18,6 @@ class CategoriesMealsScreen extends StatefulWidget {
 
 class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
   MealCategory category;
-  List<Meal> displayedMeals = [];
   bool _loadedInitData = false;
 
   // If the context wasn't required we could have use initState.
@@ -27,9 +28,10 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
     super.didChangeDependencies();
 
     if (_loadedInitData) return;
-
+    var routeArgs = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>);
     category = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>)['category'];
-    displayedMeals = DUMMY_MEALS.where((meal) => meal.categories.contains(category.id)).toList();
+    widget._availableMeals =
+        widget._availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
 
     _loadedInitData = true;
   }
@@ -46,10 +48,10 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
 
   Widget buildScaffoldBody(BuildContext context) {
     return ListView.builder(
-      itemCount: displayedMeals.length,
+      itemCount: widget._availableMeals.length,
       itemBuilder: ((context, index) {
         return MealItem(
-          meal: displayedMeals[index],
+          meal: widget._availableMeals[index],
           removeItemHandler: removeMealItem,
         );
       }),
@@ -57,6 +59,6 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
   }
 
   void removeMealItem(Meal meal) {
-    setState(() => displayedMeals.remove(meal));
+    setState(() => widget._availableMeals.remove(meal));
   }
 }
