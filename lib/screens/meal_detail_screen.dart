@@ -9,7 +9,15 @@ class MealDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final meal = (ModalRoute.of(context).settings.arguments as Map<String, Meal>)['meal'];
     return Scaffold(
-        appBar: AppBar(title: Text(meal.title)), body: buildScaffoldBody(context, meal));
+      appBar: AppBar(title: Text(meal.title)),
+      body: buildScaffoldBody(context, meal),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.delete),
+        onPressed: () {
+          Navigator.of(context).pop(meal);
+        },
+      ),
+    );
   }
 
   buildScaffoldBody(BuildContext context, Meal meal) {
