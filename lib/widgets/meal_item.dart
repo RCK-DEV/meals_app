@@ -15,6 +15,7 @@ class MealItem extends StatelessWidget {
       MealDetailScreen.routeName,
       arguments: {'meal': meal},
     ).then((poppedArgs) {
+      // Gets triggered when screen gets popped
       if (poppedArgs != null && poppedArgs is Meal) {
         print(poppedArgs.title);
         removeItemHandler(meal);
