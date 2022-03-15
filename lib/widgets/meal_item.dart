@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:meals_app/screens/meal_detail_screen.dart';
 
@@ -7,18 +6,21 @@ import '../models/meal.dart';
 class MealItem extends StatelessWidget {
   final Meal meal;
   final Function(Meal meal) removeItemHandler;
+  final Function() updateHandler;
 
-  const MealItem({@required this.meal, @required this.removeItemHandler});
+  const MealItem({@required this.meal, this.removeItemHandler, this.updateHandler});
 
   void selectMeal(BuildContext context) {
     Navigator.of(context).pushNamed(
       MealDetailScreen.routeName,
       arguments: {'meal': meal},
     ).then((poppedArgs) {
+      updateHandler();
       // Gets triggered when screen gets popped
       if (poppedArgs != null && poppedArgs is Meal) {
-        print(poppedArgs.title);
-        removeItemHandler(meal);
+        // print(poppedArgs.title);
+        // removeItemHandler(meal);
+        updateHandler();
       }
     });
   }

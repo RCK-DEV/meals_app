@@ -4,6 +4,10 @@ import '../models/meal.dart';
 
 class MealDetailScreen extends StatelessWidget {
   static const routeName = '/meal-detail';
+  final Function(Meal) favoriteHandler;
+  final Function(Meal) isFavoriteHandler;
+
+  MealDetailScreen(this.favoriteHandler, this.isFavoriteHandler);
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +16,10 @@ class MealDetailScreen extends StatelessWidget {
       appBar: AppBar(title: Text(meal.title)),
       body: buildScaffoldBody(context, meal),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.delete),
+        child: Icon(isFavoriteHandler(meal) ? Icons.star : Icons.star_border),
         onPressed: () {
-          Navigator.of(context).pop(meal);
+          favoriteHandler(meal);
+          // Navigator.of(context).pop(meal);
         },
       ),
     );

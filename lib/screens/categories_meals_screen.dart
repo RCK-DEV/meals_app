@@ -35,7 +35,6 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
     super.didChangeDependencies();
 
     if (_loadedInitData) return;
-    var routeArgs = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>);
     category = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>)['category'];
     _availableMeals =
         _availableMeals.where((meal) => meal.categories.contains(category.id)).toList();

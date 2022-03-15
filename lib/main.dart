@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
-import 'package:meals_app/screens/categories_meals_screen.dart';
-import 'package:meals_app/screens/filters_screen.dart';
-import 'package:meals_app/screens/meal_detail_screen.dart';
-import 'package:meals_app/screens/tabs_screen.dart';
-
-import './screens/categories_screen.dart';
 import './screens/categories_meals_screen.dart';
+import './screens/filters_screen.dart';
+import './screens/meal_detail_screen.dart';
+import './screens/tabs_screen.dart';
 import './models/filter.dart';
 import './dummy_data.dart';
 import './models/meal.dart';
@@ -28,6 +25,7 @@ class _MyAppState extends State<MyApp> {
   ];
 
   List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(List<Filter> filterData) {
     setState(() {
@@ -53,6 +51,22 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _toggleFavorite(Meal meal) {
+    setState(() {
+      final existingIndex =
+          _favoriteMeals.indexWhere((favoriteMeal) => favoriteMeal.title == meal.title);
+      if (existingIndex >= 0) {
+        _favoriteMeals.removeAt(existingIndex);
+      } else {
+        _favoriteMeals.add(meal);
+      }
+    });
+  }
+
+  bool _isMealFavorite(Meal meal) {
+    return _favoriteMeals.any((favoriteMeal) => favoriteMeal.title == meal.title);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -75,14 +89,14 @@ class _MyAppState extends State<MyApp> {
           colorScheme:
               ColorScheme.fromSwatch(primarySwatch: Colors.pink).copyWith(secondary: Colors.amber)),
       routes: {
-        TabsScreen.routeName: (context) => TabsScreen(),
+        TabsScreen.routeName: (context) => TabsScreen(_favoriteMeals),
         CategoriesMealsScreen.routeName: (context) => CategoriesMealsScreen(_availableMeals),
-        MealDetailScreen.routeName: (context) => MealDetailScreen(),
+        MealDetailScreen.routeName: (context) => MealDetailScreen(_toggleFavorite, _isMealFavorite),
         FiltersScreen.routeName: (context) => FiltersScreen(_setFilters, filters),
       },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(builder: (context) {
-          return TabsScreen();
+          return TabsScreen(_favoriteMeals);
         });
       },
     );
