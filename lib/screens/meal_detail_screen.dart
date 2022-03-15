@@ -87,6 +87,12 @@ class MealDetailScreen extends StatelessWidget {
     );
   }
 
+  // Note: If the app theme changes you should convert this builder
+  // method into a seperate widget in order to prevent unnecessary
+  // rebuilds of the MealDetailScreen widget since the Theme.of
+  // is used in here which triggers the build method whenever the
+  // Theme gets changed. Since currently the theme doesn't change
+  // it doesn't matter and using a builder method is fine.
   Container buildTitleWidget(BuildContext context, String title) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 10),
