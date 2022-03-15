@@ -8,7 +8,7 @@ class CategoriesMealsScreen extends StatefulWidget {
   // final Category category;
   // const CategoriesMealsScreen(this.category);
   static const routeName = '/category-meals';
-  List<Meal> _availableMeals;
+  final List<Meal> _availableMeals;
 
   CategoriesMealsScreen(this._availableMeals);
 
@@ -19,6 +19,13 @@ class CategoriesMealsScreen extends StatefulWidget {
 class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
   MealCategory category;
   bool _loadedInitData = false;
+  List<Meal> _availableMeals;
+
+  @override
+  void initState() {
+    super.initState();
+    _availableMeals = widget._availableMeals;
+  }
 
   // If the context wasn't required we could have use initState.
   // context isn't yet available in initState and thus didChangeDependencies
@@ -30,8 +37,8 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
     if (_loadedInitData) return;
     var routeArgs = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>);
     category = (ModalRoute.of(context).settings.arguments as Map<String, MealCategory>)['category'];
-    widget._availableMeals =
-        widget._availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
+    _availableMeals =
+        _availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
 
     _loadedInitData = true;
   }
@@ -48,10 +55,10 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
 
   Widget buildScaffoldBody(BuildContext context) {
     return ListView.builder(
-      itemCount: widget._availableMeals.length,
+      itemCount: _availableMeals.length,
       itemBuilder: ((context, index) {
         return MealItem(
-          meal: widget._availableMeals[index],
+          meal: _availableMeals[index],
           removeItemHandler: removeMealItem,
         );
       }),
@@ -59,6 +66,6 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
   }
 
   void removeMealItem(Meal meal) {
-    setState(() => widget._availableMeals.remove(meal));
+    setState(() => _availableMeals.remove(meal));
   }
 }

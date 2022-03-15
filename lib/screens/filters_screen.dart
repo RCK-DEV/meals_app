@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/screens/categories_meals_screen.dart';
 import 'package:meals_app/screens/tabs_screen.dart';
 
 import '../models/filter.dart';
@@ -16,13 +15,15 @@ class FiltersScreen extends StatefulWidget {
   State<FiltersScreen> createState() => _FiltersScreenState();
 }
 
-class FilterWrapper {
-  bool _value = false;
-  FilterWrapper(this._value);
-  switchState() => _value = !_value;
-}
-
 class _FiltersScreenState extends State<FiltersScreen> {
+  List<Filter> _filters;
+
+  @override
+  void initState() {
+    super.initState();
+    _filters = widget._filters;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +32,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              widget._saveFilters(widget._filters);
+              widget._saveFilters(_filters);
               Navigator.of(context).pushReplacementNamed(TabsScreen.routeName);
             },
             icon: Icon(Icons.save),
@@ -50,12 +51,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
           ),
           Expanded(
               child: ListView(
-            children: widget._filters.map((filter) {
+            children: _filters.map((filter) {
               return _buildSwitchListTile(filter);
             }).toList(),
-            // children: [
-            //   _buildSwitchListTile(_glutenFree, 'Gluten-free', 'Only includes gluten-free meals.'),
-            // ],
           ))
         ],
       ),
